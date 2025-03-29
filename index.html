@@ -271,21 +271,19 @@ async function f(event) {
   event.preventDefault();
   const username = emailInput.value.trim();
 const password = passwordInput.value.trim();
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailRegex = /^(?:[^\s@]+@[^\s@]+\.[^\s@]+|\+?\d{10,15})$/;
 
-
-if (username === "" || password.length <4) {
+if (username === "" || password.length < 4) {
   errormsg.innerText = `Invalid Credentials!`;
   errormsg.style.opacity = 1;
   return;
 }
 
 if (!emailRegex.test(username)) {
-  errormsg.innerText = `Invalid Email Format!`;
+  errormsg.innerText = `Invalid Email or Mobile Number Format!`;
   errormsg.style.opacity = 1;
   return;
 }
-
 
   // Fixing the username replacement for Firebase key
   const u = username.replace(/\./, "'DOT'");
